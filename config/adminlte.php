@@ -187,7 +187,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'admin',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -241,13 +241,23 @@ return [
             'label'       => 4,
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+        ['header' => 'Administrasi'],
+        [
+            'text' => 'Angkot',
+            'url'  => 'admin/transportations',
+            'icon' => 'fas fa-fw fa-bus',
+        ],
+        [
+            'text' => 'Halte',
+            'url'  => 'admin/terminals',
+            'icon' => 'fas fa-fw fa-map-marker',
+        ],
+        ['header' => 'Pengaturan'],
         [
             'text' => 'profile',
             'url'  => 'admin/profile',
             'icon' => 'fas fa-fw fa-user',
         ],
-        ['header' => 'Administrasi'],
     ],
 
     /*
@@ -281,12 +291,12 @@ return [
     |
     | For detailed instructions you can look the plugins section here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Other-Configuration
-    |
+    | https:
     */
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -299,9 +309,19 @@ return [
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => false,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.datatables.net/responsive/2.2.7/css/responsive.dataTables.min.css',
                 ],
             ],
         ],
