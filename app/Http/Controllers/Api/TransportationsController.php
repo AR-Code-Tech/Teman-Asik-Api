@@ -39,9 +39,13 @@ class TransportationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Transportation $transportation)
     {
-        //
+        $transportation->load('routes');
+        return response([
+            'status' => 'success',
+            'data' => $transportation
+        ], 200);
     }
 
     /**
