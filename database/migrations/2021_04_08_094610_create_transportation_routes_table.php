@@ -15,6 +15,9 @@ class CreateTransportationRoutesTable extends Migration
     {
         Schema::create('transportation_routes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('transportation_id')->onUpdate('cascade')->onDelete('cascade');
+            $table->double('latitude');
+            $table->double('longitude');
             $table->timestamps();
         });
     }

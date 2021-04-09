@@ -18,4 +18,9 @@ class Transportation extends Model
         'name',
         'description',
     ];
+
+    public function routes()
+    {
+        return $this->hasMany(TransportationRoutes::class);
+    }
 }

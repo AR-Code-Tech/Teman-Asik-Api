@@ -314,6 +314,11 @@ return [
                     'location' => '//cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => false,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',

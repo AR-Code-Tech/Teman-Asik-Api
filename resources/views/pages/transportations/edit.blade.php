@@ -17,6 +17,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="float-sm-right">
+                        <button type="button" class="btn btn-primary" @click="beforeSubmit">Simpan</button>
                         <a href="{{ route('admin.transportations.index') }}" class="btn btn-danger">Batal</a>
                     </div>
                 </div>
@@ -35,9 +36,10 @@
                         <!-- flush message error -->
                         <x-message /> 
                         <!-- flush message error:end -->
-                        <form action="{{ route('admin.transportations.update', ['transportation' => $transportation->id]) }}" method="POST" autocomplete="off">
+                        <form id="myForm" action="{{ route('admin.transportations.update', ['transportation' => $transportation->id]) }}" method="POST" autocomplete="off">
                             @method('PUT')
                             @csrf
+                            <input type="hidden" name="routes" value="[]">
                             <div class="form-group row my-2">
                                 <label class="col-sm-4 col-form-label text-md-right">Nama</label>
                                 <div class="col-md-4">
@@ -57,9 +59,54 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr>
+                            <div class="form-group row my-2">
+                                <div class="offset-md-2 col-md-8">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Rute - List</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Rute - Json</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                            <button type="button" class="btn btn-sm btn-success mt-4" @click="addNew"><i class="fa fa-fw fa-plus"></i></button>
+                                            <table class="table table-sm table-bordered mt-2">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%" class="text-center">#</th>
+                                                        <th>Kordinat</th>
+                                                        <th width="10%" class="text-center">...</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(item, i) in routes">
+                                                        <td class="text-center">@{{ i+1 }}</th>
+                                                        <td class="input-group input-group-sm">
+                                                            <input type="text" name="latitude" class="form-control" autocomplete="off" placeholder="Latitude" v-model="routes[i].latitude">
+                                                            <span class="input-group-text input-group-text-sm">
+                                                                ,
+                                                            </span>
+                                                            <input type="text" name="longitude" class="form-control" autocomplete="off" placeholder="Longitude" v-model="routes[i].longitude">
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button type="button" class="btn btn-sm btn-danger" @click="deleteData(i)"><i class="fa fa-fw fa-times"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                            <textarea class="form-control mt-4" v-model="routesJSON" rows="30"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group row my-2">
                                 <div class="offset-md-4 col-md-4">
-                                    <button class="btn btn-primary">
+                                    <button type="button" class="btn btn-primary" @click="beforeSubmit">
                                         Simpan
                                     </button>
                                 </div>
@@ -73,7 +120,110 @@
 @stop
 
 @section('css')
+    <style>
+    .input-group-text-sm {
+        padding-top: 0!important;
+    }
+    </style>
 @stop
 
 @section('js')
+    <script>
+        var routes = @JSON($transportation->routes);
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    routes,
+                    routesJSON: "",
+                }
+            },
+            methods: {
+                addNew() {
+                    this.routes.push({
+                        latitude: parseFloat(0),
+                        longitude: parseFloat(0),
+                    });
+                    this.routesJSON = this.syntaxHighlight(this.routes);
+                },
+                deleteData(index) {
+                    this.routes.splice(index, 1);
+                    this.routesJSON = this.syntaxHighlight(this.routes);
+                },
+                checkValidJson(json) {
+                    try {
+                        JSON.parse(json);
+                    } catch (e) {
+                        console.log(e)
+                        return false;
+                    }
+                    return true;
+                },
+                beforeSubmit() {
+                    if (!this.checkValidJson(this.routesJSON)) {
+                        $('#myTab li:last-child a').tab('show')
+                        return alert('JSON Gagal DiProses! Pastikan tidak ada salah penulisan dalam json.');
+                    }
+                    var res = this.routes.map(function(e) {
+                        return {
+                            latitude: parseFloat(e.latitude),
+                            longitude: parseFloat(e.longitude),
+                        };
+                    });
+                    document.querySelector("input[name='routes']").value = JSON.stringify(res);
+                    document.querySelector("#app form#myForm").submit();
+                },
+                syntaxHighlight(obj) {
+                    obj = obj.map(function(e) {
+                        return {
+                            latitude: parseFloat(e.latitude),
+                            longitude: parseFloat(e.longitude),
+                        };
+                    });
+                    return JSON.stringify(obj,null,2);
+                    if (typeof json != 'string') {
+                        json = JSON.stringify(json, undefined, 2);
+                    }
+                    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                        var cls = 'number';
+                        if (/^"/.test(match)) {
+                            if (/:$/.test(match)) {
+                                cls = 'key';
+                            } else {
+                                cls = 'string';
+                            }
+                        } else if (/true|false/.test(match)) {
+                            cls = 'boolean';
+                        } else if (/null/.test(match)) {
+                            cls = 'null';
+                        }
+                        return `"${cls}": "${match}"`;
+                    });
+                }
+            },
+            mounted() {
+                this.routes = this.routes.map(function(e) {
+                    return {
+                        latitude: e.latitude,
+                        longitude: e.longitude
+                    };
+                });
+                this.routesJSON = this.syntaxHighlight(this.routes);
+                var $this = this;
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                    if (e.target.id != 'profile-tab') {
+                        if (!$this.checkValidJson($this.routesJSON)) {
+                            $('#myTab li:last-child a').tab('show')
+                            return alert('JSON Gagal DiProses! Pastikan tidak ada salah penulisan dalam json.');
+                        } else {
+                            $this.routes = JSON.parse($this.routesJSON);
+                        }
+                    } else {
+                        $this.routesJSON = $this.syntaxHighlight($this.routes);
+                    }
+                })
+            }
+        });
+    </script>
 @stop

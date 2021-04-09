@@ -87,11 +87,20 @@ class TransportationsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:3',
-            'description' => 'required|string|min:3'
+            'description' => 'required|string|min:3',
+            'routes' => 'required|json'
         ]);
 
         DB::transaction(function () use ($request, $transportation) {
+            $transportation->routes()->delete();
             $transportation->update($request->only('name', 'description'));
+            $routes = json_decode($request->routes);
+            foreach ($routes as $item) {
+                $transportation->routes()->create([
+                    'latitude' => $item->latitude,
+                    'longitude' => $item->longitude,
+                ]);
+            }
         });
 
         return redirect()->route('admin.transportations.index')->with('message', ['type' => 'success', 'text' => 'Berhasil mengubah.']);
