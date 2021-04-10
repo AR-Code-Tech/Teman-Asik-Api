@@ -15,7 +15,7 @@ class TransportationsController extends Controller
      */
     public function index()
     {
-        $transportations = Transportation::select('id', 'name', 'description')->get();
+        $transportations = Transportation::with('routes')->select('id', 'name', 'description')->get();
         return response([
             'status' => 'success',
             'data' => $transportations

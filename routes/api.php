@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\TerminalsController;
 use App\Http\Controllers\Api\TransportationsController;
+use App\Http\Controllers\Api\NavigationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('transportations', TransportationsController::class);
 Route::apiResource('terminals', TerminalsController::class);
+Route::get('navigation', [NavigationController::class, 'index']);
