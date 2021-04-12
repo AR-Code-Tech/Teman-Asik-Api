@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TerminalsController;
 use App\Http\Controllers\Api\TransportationsController;
 use App\Http\Controllers\Api\NavigationController;
@@ -24,3 +25,10 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('transportations', TransportationsController::class);
 Route::apiResource('terminals', TerminalsController::class);
 Route::get('navigation', [NavigationController::class, 'index']);
+
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('profile', [AuthController::class, 'profile'])->middleware('auth:api');
+    Route::post('login', [AuthController::class, 'login']);
+});
