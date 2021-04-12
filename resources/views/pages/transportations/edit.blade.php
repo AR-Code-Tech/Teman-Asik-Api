@@ -69,6 +69,9 @@
                                         <li class="nav-item">
                                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Rute - Json</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="linestring-tab" data-toggle="tab" href="#linestring" role="tab" aria-controls="linestring" aria-selected="false">Rute - Line String (Google Earth KML)</a>
+                                        </li>
                                     </ul>
                                     <div class="tab-content" id="myTabContent">
                                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -100,6 +103,9 @@
                                         </div>
                                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                             <textarea class="form-control mt-4" v-model="routesJSON" rows="30"></textarea>
+                                        </div>
+                                        <div class="tab-pane fade" id="linestring" role="tabpanel" aria-labelledby="linestring-tab">
+                                            <textarea class="form-control mt-4" v-model="routesLineString" rows="30"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -136,6 +142,7 @@
                 return {
                     routes,
                     routesJSON: "",
+                    routesLineString: "",
                 }
             },
             methods: {
@@ -145,10 +152,21 @@
                         longitude: parseFloat(0),
                     });
                     this.routesJSON = this.syntaxHighlight(this.routes);
+                    this.routesLineString = this.formatLineString(this.routes);
                 },
                 deleteData(index) {
                     this.routes.splice(index, 1);
                     this.routesJSON = this.syntaxHighlight(this.routes);
+                    this.routesLineString = this.formatLineString(this.routes);
+                },
+                formatLineString(routes = []) {
+                    var result = '';
+                    var i = 0;
+                    routes.forEach(e => {
+                        result += (i == routes.length-1) ? `${e.latitude},${e.longitude}` : `${e.latitude},${e.longitude} `
+                        i++;
+                    });
+                    return result;
                 },
                 checkValidJson(json) {
                     try {
@@ -210,6 +228,7 @@
                     };
                 });
                 this.routesJSON = this.syntaxHighlight(this.routes);
+                this.routesLineString = this.formatLineString(this.routes);
                 var $this = this;
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                     if (e.target.id != 'profile-tab') {
@@ -219,9 +238,22 @@
                         } else {
                             $this.routes = JSON.parse($this.routesJSON);
                         }
-                    } else {
-                        $this.routesJSON = $this.syntaxHighlight($this.routes);
                     }
+                    if (e.target.id != 'linestring-tab' && e.relatedTarget.id == 'linestring-tab') {
+                        var a = $this.routesLineString.split(' ')
+                        var b = [];
+                        a.forEach((e) => {
+                            c = e.split(',');
+                            if (c[0] == '' || c[1] == '' || c[2] == '') return ;
+                            b.push({
+                                latitude: c[1],
+                                longitude: c[0],
+                            })
+                        })
+                        $this.routes = b;
+                    }
+                    $this.routesJSON = $this.syntaxHighlight($this.routes);
+                    $this.routesLineString = $this.formatLineString($this.routes);
                 })
             }
         });
