@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
+use App\Models\Driver;
+use App\Models\Transportation;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -15,14 +18,17 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        $driver = Driver::create([
+            'transportation_id' => 1
+        ]);
+        $driver->user()->create([
             'name' => 'Example Driver',
             'username' => 'driver',
             'password' => Hash::make('driver')
         ]);
-        User::create([
+
+        (Admin::create([]))->user()->create([
             'name' => 'Example Admin',
-            'role' => 'Admin',
             'username' => 'admin',
             'password' => Hash::make('admin')
         ]);
