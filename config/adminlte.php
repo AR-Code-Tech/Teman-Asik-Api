@@ -252,12 +252,17 @@ return [
             'url'  => 'admin/terminals',
             'icon' => 'fas fa-fw fa-map-marker',
         ],
-        ['header' => 'Pengaturan'],
         [
-            'text' => 'profile',
-            'url'  => 'admin/profile',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Driver',
+            'url'  => 'admin/drivers',
+            'icon' => 'fas fa-fw fa-users',
         ],
+        // ['header' => 'Pengaturan'],
+        // [
+        //     'text' => 'profile',
+        //     'url'  => 'admin/profile',
+        //     'icon' => 'fas fa-fw fa-user',
+        // ],
     ],
 
     /*

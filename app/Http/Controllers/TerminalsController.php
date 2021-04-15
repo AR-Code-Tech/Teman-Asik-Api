@@ -106,8 +106,9 @@ class TerminalsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Terminal $terminal)
     {
-        //
+        $terminal->delete();
+        return redirect()->route("admin.{$this->routeName}.index")->with('message', ['type' => 'success', 'text' => 'Berhasil menghapus.']);
     }
 }

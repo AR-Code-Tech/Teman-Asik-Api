@@ -25,4 +25,5 @@ Route::group([
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::resource('/transportations', App\Http\Controllers\TransportationsController::class);
     Route::resource('/terminals', App\Http\Controllers\TerminalsController::class);
+    Route::resource('/drivers', App\Http\Controllers\DriversController::class);
 });

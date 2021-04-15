@@ -60,7 +60,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        if ($user->role != 'Admin') {
+        if ($user->role_type != 'Admin') {
             Auth::logout();
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.failed')],

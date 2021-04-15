@@ -29,10 +29,11 @@ class UserSeeder extends Seeder
             'password' => Hash::make('driver')
         ]);
 
-        (Admin::create([]))->user()->create([
+        $admin = Admin::create([]);
+        $admin->user()->create([
             'name' => 'Example Admin',
             'username' => 'admin',
             'password' => Hash::make('admin')
-        ]);
+        ]); 
     }
 }
