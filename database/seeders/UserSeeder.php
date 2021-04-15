@@ -19,7 +19,9 @@ class UserSeeder extends Seeder
     public function run()
     {
         $driver = Driver::create([
-            'transportation_id' => 1
+            'transportation_id' => 1,
+            'identity_number' => '023132564412',
+            'plate_number' => '123321'
         ]);
         $driver->user()->create([
             'name' => 'Example Driver',

@@ -16,6 +16,8 @@ class CreateDriversTable extends Migration
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transportation_id')->onUpdate('cascade')->onUpdate('cascade')->nullable();
+            $table->string('identity_number')->nullable();
+            $table->string('plate_number')->nullable();
             $table->timestamps();
         });
     }
