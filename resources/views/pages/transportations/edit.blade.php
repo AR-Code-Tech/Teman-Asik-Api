@@ -178,18 +178,22 @@
                     return true;
                 },
                 beforeSubmit() {
-                    if (!this.checkValidJson(this.routesJSON)) {
-                        $('#myTab li:last-child a').tab('show')
-                        return alert('JSON Gagal DiProses! Pastikan tidak ada salah penulisan dalam json.');
-                    }
-                    var res = this.routes.map(function(e) {
-                        return {
-                            latitude: parseFloat(e.latitude),
-                            longitude: parseFloat(e.longitude),
-                        };
-                    });
-                    document.querySelector("input[name='routes']").value = JSON.stringify(res);
-                    document.querySelector("#app form#myForm").submit();
+                    $('#myTab li:first-child a').tab('show');
+                    var $this = this;
+                    var a = setTimeout(function () {
+                        if (!$this.checkValidJson($this.routesJSON)) {
+                            $('#myTab li:nth-child(2) a').tab('show');
+                            return alert('JSON Gagal DiProses! Pastikan tidak ada salah penulisan dalam json.');
+                        }
+                        var res = $this.routes.map(function(e) {
+                            return {
+                                latitude: parseFloat(e.latitude),
+                                longitude: parseFloat(e.longitude),
+                            };
+                        });
+                        document.querySelector("input[name='routes']").value = JSON.stringify(res);
+                        document.querySelector("#app form#myForm").submit();
+                    }, 500);
                 },
                 syntaxHighlight(obj) {
                     obj = obj.map(function(e) {

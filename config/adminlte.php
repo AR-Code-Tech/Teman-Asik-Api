@@ -238,8 +238,6 @@ return [
             'text'        => 'Home',
             'url'         => 'admin',
             'icon'        => 'fa fa-fw fa-home',
-            'label'       => 4,
-            'label_color' => 'success',
         ],
         ['header' => 'Administrasi'],
         [
