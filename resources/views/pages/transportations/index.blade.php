@@ -37,6 +37,7 @@
                         <thead>
                             <th>Nama</th>
                             <th>Deskripsi</th>
+                            <th>Harga</th>
                             <th width="15%" class="text-center">...</th>
                         </thead>
                     </table>
@@ -60,11 +61,11 @@
             autoWidth: false,
             order: [[0, 'asc']],
             columns: [
+                { data: 'name' },
+                { data: 'description' },
                 {
-                    data: 'name'
-                },
-                {
-                    data: 'description'
+                    data: 'cost',
+                    render: (data, type, row) => `Rp ${data}`
                 },
                 {
                     data: null,

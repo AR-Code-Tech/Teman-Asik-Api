@@ -17,6 +17,7 @@ class CreateTransportationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
+            $table->decimal('cost', 10, 2)->default(0);
             $table->timestamps();
         });
     }

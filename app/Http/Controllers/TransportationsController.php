@@ -44,11 +44,12 @@ class TransportationsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:3',
-            'description' => 'required|string|min:3'
+            'description' => 'required|string|min:3',
+            'cost' => 'required|numeric',
         ]);
 
         DB::transaction(function () use ($request) {
-            Transportation::create($request->only('name', 'description'));
+            Transportation::create($request->only('name', 'description', 'cost'));
         });
 
         return redirect()->route('admin.transportations.index')->with('message', ['type' => 'success', 'text' => 'Berhasil menambahkan.']);
@@ -88,12 +89,13 @@ class TransportationsController extends Controller
         $request->validate([
             'name' => 'required|string|min:3',
             'description' => 'required|string|min:3',
+            'cost' => 'required|numeric',
             'routes' => 'required|json'
         ]);
 
         DB::transaction(function () use ($request, $transportation) {
             $transportation->routes()->delete();
-            $transportation->update($request->only('name', 'description'));
+            $transportation->update($request->only('name', 'description', 'cost'));
             $routes = json_decode($request->routes);
             foreach ($routes as $item) {
                 $transportation->routes()->create([

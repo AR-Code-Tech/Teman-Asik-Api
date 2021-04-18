@@ -49,6 +49,17 @@
                                 </div>
                             </div>
                             <div class="form-group row my-2">
+                                <label class="col-sm-4 col-form-label text-md-right">Harga</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-fw fa-id-card"></i>
+                                        </span>
+                                        <input type="number" name="cost" class="form-control" autocomplete="off" placeholder="Harga">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row my-2">
                                 <label class="col-sm-4 col-form-label text-md-right">Deskripsi</label>
                                 <div class="col-md-4">
                                     <div class="input-group">
