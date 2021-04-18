@@ -47,7 +47,7 @@ class NavigationController extends Controller
 
         // get all prediction
         $transportations = Transportation::with('routes')
-            ->select('id', 'name', 'description')
+            ->select('id', 'name', 'description', 'cost')
             ->get();
         
         $result = [];
@@ -55,6 +55,7 @@ class NavigationController extends Controller
         $bestScoreIndex = null;
         for ($i=0; $i < count($transportations); $i++) { 
             $tmp = $this->_getRouting($data['origin'], $data['destination'], $transportations[$i]);
+            $tmp['distance'] = (double) $this->_getCost($tmp);
             if ($bestScore > $tmp['score']) {
                 $bestScoreIndex = $i;
                 $bestScore = $tmp['score'];
@@ -70,8 +71,45 @@ class NavigationController extends Controller
         // 
         $data['best'] = $result[$bestScoreIndex];
         $data['transportations'] = $result;
+        //	$result = json_decode(json_encode(unserialize(str_replace(array('NAN;','INF;'),'0;',serialize($data)))));
+        //	return response()->json($result);
+        //	dd($data);
         return $data;
     }
+
+    private function _getCost($transportation)
+    {
+        $start = $transportation['closestPointFromOrigin'];
+        $end = $transportation['closestPointFromDestination'];
+        $distance = $this->_getDistance(
+            $start->latitude, $start->longitude,
+            $end->latitude, $end->longitude,
+        );
+        $result = [
+            'start' => $start,
+            'end' => $end,
+            'distance' => number_format($distance, 2),
+        ];
+        return number_format($distance, 2);
+    }
+
+    private function _getDistance($lat1, $lon1, $lat2, $lon2, $unit = 'K') {
+
+        $theta = $lon1 - $lon2;
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
+        $miles = $dist * 60 * 1.1515;
+        $unit = strtoupper($unit);
+      
+        if ($unit == "K") {
+            return ($miles * 1.609344);
+        } else if ($unit == "N") {
+            return ($miles * 0.8684);
+        } else {
+            return $miles;
+        }
+      }
 
 
     private function _getRouting($origin, $destination, $transportation)
